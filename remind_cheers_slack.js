@@ -38,22 +38,24 @@ function cheers_slack() {
     var timeSet = new Date();
     if (timeSet.getMinutes() == 0) {
         const calendars = CalendarApp.getDefaultCalendar();
-        const startTime = new Date();
-        //何日前の予定を取って来るか指定
-        const endTime = new Date(startTime.getTime() + ((24 * 60 * 60 * 1000) * 31));
-        //カレンダータイトルをsearchで設定
-        const getCalendar = calendars.getEvents(startTime, endTime, {
-            search: searchEventName
-        });
-        var notifyTime = new Date();
-        //イベント終了何時間後にslackを流すか
+        //イベント終了何時間後にお疲れ様メールを流すか
         var notifyRemainHour = 1;
-        if (new Date(notifyTime.getTime() + ((60 * 60 * 1000) * notifyRemainHour) <= getCalendar[i].getEndTime()) && getCalendar[i].getEndTime() < new Date(notifyTime.getTime() + ((60 * 60 * 1000) * (notifyRemainHour + 1)))) {
-            var slackMessage = "hogehoge"
-            sendSlack(slackMessage);
+        const startTime = new Date(timeSet - ((60 * 60 * 1000) * notifyRemainHour));
+        //何日前の予定を取って来るか指定
+        const endTime = new Date();
+        //カレンダータイトルをsearchで設定
+        const getCalendar = calendars.getEvents(startTime, endTime, {search: searchEventName});
+        for (var i = 0; i < getCalendar.length; i++) {
+            var notifyTime = new Date();
+            if (getCalendar[i].getEndTime() <= new Date(notifyTime.getTime() + ((60 * 60 * 1000) * (notifyRemainHour)))) {
+                var slackMessage = "飲み会お疲れ様!!!!来月もよろしく！！！"
+                sendSlack(slackMessage);
+            }
         }
     }
 }
+
+
 
 
 //人数カウントする
