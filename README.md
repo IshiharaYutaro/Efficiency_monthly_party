@@ -1,0 +1,3 @@
+# Efficiency_monthly_party
+
+googleカレンダーのapiを利用して、slackに予定をリマインドする
